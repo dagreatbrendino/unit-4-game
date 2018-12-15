@@ -29,13 +29,19 @@ var playerFighter = {
         //if the enemies hp is below zero, change the value of killed in the enemy object to true
         if (enemyFighter.enemyHP <= 0) {
             enemyFighter.killed = true;
+            $("#info").append("<p>You have defeated " + allFighters[enemyFighter.indexofEnemy].name + ", you can now take on a new opponent</p>");
+            this.playerAtk += allFighters[this.indexofFighter].atk;
         }
-
+        else{
+            $("#info").append("<p>You attacked " + allFighters[enemyFighter.indexofEnemy].name + " for " + this.playerAtk + " damage. </p>");
+        }
+        
         this.playerAtk += allFighters[this.indexofFighter].atk;
     },
-    die: function (dying) {
-        if (dying) {
+    die: function () {
+        if (this.dying) {
             // cause the game to end
+            alert("you have died")
         }
     }
 }
@@ -56,13 +62,25 @@ var enemyFighter = {
     },
     counterAtk: function () {
         //subtract enemies counter attack from players hp
+        playerFighter.playerHP -= this.enemyAtk;
         //if the player's hp has fallen below zero, change the value of dying in the player object to true
+        if(playerFighter.playerHP <=0){
+            playerFighter.dying=true;
+            $("#info").append("<p>You have been defeated!!!</p>");
+        }
+        else{
+            $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
+        }
     },
     killed: false,
-    kill: function (killed) {
-        if (killed) {
+    kill: function () {
+        if (this.killed) {
             //remove the enemy from the dom
+            
+            alert("you have killed the enemy")
             enemySelected = false;
+            $("#defender > div > img").attr("src", "assets/images/placeholder.jpg");
+            $("#instructions").text("Choose the defender!")
         }
     }
 
@@ -87,23 +105,46 @@ $(document).ready(function () {
             playerFighter.setindexofFighter(index);
             playerFighter.setplayerAtk();
             playerFighter.setplayerHP();
-            $("#player > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg");
+            $("#player > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg"); //changing the image for the selected fighter
+            $("#player > div > .healthpoints").text(playerFighter.playerHP);
             fighterSelected = true;
             // fightersLeft.splice(index,1);
-            $(this).remove();
+            $(this).remove();//Selection can no longer be made
+            $("#instructions").text("Choose the defender!")
         }
         //If the player has already chosen their character and they click on a different character, if they are not currently fighting an enemy, the enemy fighter object
         //will have it's values reassigned to the values of the character the player clicked on. The player will not be able to select another enemy until they have defeated
         //the current enemy
         else if (!enemySelected){
-            var index = parseInt($(this).attr("value"));
+            enemyFighter.killed = false;
+            var index = parseInt($(this).attr("value"));//grabing the value attribute assigned when the character elements were first added to the dom
             enemyFighter.setindexofEnemy(index);
             enemyFighter.setenemyAtk();
             enemyFighter.setenemyHP();
-            $("#defender > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg");
+            $("#defender > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg");//changing the image for the selected enemy
             enemySelected = true;
-            $(this).remove();
+            $(this).remove();//Selection can no longer be made
+            $("#instructions").text("Defeat the defender!")
+            $("#info").empty();
         }
+    });
+    $("#attack").on("click",function(){
+        //If the player has chosen their character and the defender 
+        if(enemySelected && fighterSelected){
+            //The player fighter attacks the enemy fighter
+            $("#info").empty();
+            playerFighter.attack();
+            
+            //The enemy fighter is checked to see if it should be killed
+            enemyFighter.kill();
+            //If the enemy is still alive, it will counter attack the player
+            if(!enemyFighter.killed){
+                enemyFighter.counterAtk();   
+                //The player character will be checked to see if it should die
+                playerFighter.die();
+            }
+        }
+        
     });
 
 });
