@@ -31,9 +31,11 @@ var playerFighter = {
             enemyFighter.killed = true;
             $("#info").append("<p>You have defeated " + allFighters[enemyFighter.indexofEnemy].name + ", you can now take on a new opponent</p>");
             this.playerAtk += allFighters[this.indexofFighter].atk;
+            $("#defender > div > .healthpoints").text("");
         }
         else{
             $("#info").append("<p>You attacked " + allFighters[enemyFighter.indexofEnemy].name + " for " + this.playerAtk + " damage. </p>");
+            $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
         }
         
         this.playerAtk += allFighters[this.indexofFighter].atk;
@@ -67,9 +69,11 @@ var enemyFighter = {
         if(playerFighter.playerHP <=0){
             playerFighter.dying=true;
             $("#info").append("<p>You have been defeated!!!</p>");
+            $("#player > div > .healthpoints").text("");
         }
         else{
             $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
+            $("#player > div > .healthpoints").text(playerFighter.playerHP);
         }
     },
     killed: false,
@@ -122,6 +126,7 @@ $(document).ready(function () {
             enemyFighter.setenemyAtk();
             enemyFighter.setenemyHP();
             $("#defender > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg");//changing the image for the selected enemy
+            $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
             enemySelected = true;
             $(this).remove();//Selection can no longer be made
             $("#instructions").text("Defeat the defender!")
