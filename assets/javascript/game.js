@@ -36,6 +36,10 @@ var playerFighter = {
         else{
             $("#info").append("<p>You attacked " + allFighters[enemyFighter.indexofEnemy].name + " for " + this.playerAtk + " damage. </p>");
             $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
+            debugger
+            var width = $("#defender > div > .healthbar").width()*( enemyFighter.enemyHP/ allFighters[enemyFighter.indexofEnemy].hp);
+            var height = $("#defender > div > .healthbar").height();
+            $("#defender > div > .healthbar").attr("style","clip: rect(0, "+width+"px, "+height+"px, 0)" );
         }
         
         this.playerAtk += allFighters[this.indexofFighter].atk;
@@ -43,6 +47,7 @@ var playerFighter = {
     die: function () {
         if (this.dying) {
             // cause the game to end
+            fighterSelected = false;
             alert("you have died")
         }
     }
@@ -68,6 +73,7 @@ var enemyFighter = {
         //if the player's hp has fallen below zero, change the value of dying in the player object to true
         if(playerFighter.playerHP <=0){
             playerFighter.dying=true;
+            $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
             $("#info").append("<p>You have been defeated!!!</p>");
             $("#player > div > .healthpoints").text("");
         }
@@ -83,7 +89,7 @@ var enemyFighter = {
             
             alert("you have killed the enemy")
             enemySelected = false;
-            $("#defender > div > img").attr("src", "assets/images/placeholder.jpg");
+            $("#defender > div > img").attr("src", "assets/images/placeholder.png");
             $("#instructions").text("Choose the defender!")
         }
     }

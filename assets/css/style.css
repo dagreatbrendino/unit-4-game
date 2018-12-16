@@ -1,8 +1,39 @@
+body{
+    background-image: url(../images/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 .healthpoints{
     position: absolute;
-    bottom: 0;
+    bottom: 10%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 150;
+}
+.healthbar{
+    position: absolute;
+    bottom: 0%;
     left: 0;
     right: 0;
     margin: 0 auto;
     z-index: 100;
+    width: 75%;
+    height: 10%;
+    background-color: green;
+    padding: inherit;
+}
+.healthbar-background{
+    position: absolute;
+    bottom: 0%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 50;
+    width: 75%;
+    height: 10%;
+    background-color: red;
+    /* padding: 3px;
+    border: 5px solid gray;
+    box-sizing: border-box; */
 }
