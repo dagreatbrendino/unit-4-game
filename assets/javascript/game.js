@@ -37,9 +37,9 @@ var playerFighter = {
             $("#info").append("<p>You attacked " + allFighters[enemyFighter.indexofEnemy].name + " for " + this.playerAtk + " damage. </p>");
             $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
             debugger
-            var width = $("#defender > div > .healthbar").width()*( enemyFighter.enemyHP/ allFighters[enemyFighter.indexofEnemy].hp);
-            var height = $("#defender > div > .healthbar").height();
-            $("#defender > div > .healthbar").attr("style","clip: rect(0, "+width+"px, "+height+"px, 0)" );
+            var width = $("#defender > div > .healthbar-background").width()*( enemyFighter.enemyHP/ allFighters[enemyFighter.indexofEnemy].hp);
+            var height = $("#defender > div > div > .healthbar").height();
+            $("#defender > div > div > .healthbar").attr("style","clip: rect(0, "+width+"px, "+height+"px, 0)" );
         }
         
         this.playerAtk += allFighters[this.indexofFighter].atk;
@@ -80,6 +80,9 @@ var enemyFighter = {
         else{
             $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
             $("#player > div > .healthpoints").text(playerFighter.playerHP);
+            var width = $("#player > div > .healthbar-background").width()*( playerFighter.playerHP/ allFighters[playerFighter.indexofFighter].hp);
+            var height = $("#player > div > div > .healthbar").height();
+            $("#player > div > div > .healthbar").attr("style","clip: rect(0, "+width+"px, "+height+"px, 0)" );
         }
     },
     killed: false,
