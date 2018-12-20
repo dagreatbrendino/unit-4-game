@@ -8,6 +8,7 @@ var allFighters = [{ name: "Mace Windu", hp: 150, atk: 8, counter: 20, alive: tr
 // { name: "Kylo Ren", hp: 100, atk: 6, counter: 10, alive: true, picked: false }];
 
 var fighterSelected = false;
+var score = 0;
 
 var playerFighter = {
     indexofFighter: 0,
@@ -29,13 +30,17 @@ var playerFighter = {
         enemyFighter.enemyHP -= this.playerAtk
         //if the enemies hp is below zero, change the value of killed in the enemy object to true
         if (enemyFighter.enemyHP <= 0) {
+            score++;
             enemyFighter.killed = true;
-            $("#info").append("<p>You have defeated " + allFighters[enemyFighter.indexofEnemy].name + ", you can now take on a new opponent</p>");
+            $("#info").append("<p  style='margin-bottom: 0px'>You have defeated " + allFighters[enemyFighter.indexofEnemy].name + ", you can now take on a new opponent</p>");
             this.playerAtk += allFighters[this.indexofFighter].atk;
+            if (score === 3){
+                $("#info").html("<p style='margin-bottom: 0px'> Every challenger has been defeated!</p>")
+            }
             $("#defender > div > .healthpoints").text("");
         }
         else{
-            $("#info").append("<p>You attacked " + allFighters[enemyFighter.indexofEnemy].name + " for " + this.playerAtk + " damage. </p>");
+            $("#info").append("<p style='margin-bottom: 0px'>You attacked " + allFighters[enemyFighter.indexofEnemy].name + " for " + this.playerAtk + " damage. </p>");
             $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
             debugger
             var width = $("#defender > div > .healthbar-background").width()*( enemyFighter.enemyHP/ allFighters[enemyFighter.indexofEnemy].hp);
@@ -73,12 +78,13 @@ var enemyFighter = {
         //if the player's hp has fallen below zero, change the value of dying in the player object to true
         if(playerFighter.playerHP <=0){
             playerFighter.dying=true;
-            $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
-            $("#info").append("<p>You have been defeated!!!</p>");
+            $("#info").append("<p  style='margin-bottom: 0px'>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
+            $("#info").append("<p  style='margin-bottom: 0px'>You have been defeated!!!</p>");
             $("#player > div > .healthpoints").text("");
+            $("#player > div > div > .healthbar").animate({width: 0+"px"},500);
         }
         else{
-            $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
+            $("#info").append("<p  style='margin-bottom: 0px'>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
             $("#player > div > .healthpoints").text(playerFighter.playerHP);
             var width = $("#player > div > .healthbar-background").width()*( playerFighter.playerHP/ allFighters[playerFighter.indexofFighter].hp);
             $("#player > div > div > .healthbar").animate({width: width},500);
@@ -88,11 +94,15 @@ var enemyFighter = {
     kill: function () {
         if (this.killed) {
             //remove the enemy from the dom
-            
-            alert("you have killed the enemy")
             enemySelected = false;
+            $("#defender").attr("style","visibility: hidden;");
             $("#defender > div > img").attr("src", "assets/images/placeholder.png");
-            $("#instructions").text("Choose the defender!")
+            if (score === 3){
+                $("#instructions").text("You have won! Click the reset button to play again!")
+            }
+            else{
+                $("#instructions").text("Choose the defender!")
+            }
         }
     }
 
@@ -100,8 +110,9 @@ var enemyFighter = {
 //This function will add a character to the dom for every charater in the array passed to it
 var populateFighters = function(arr){
     $.each(arr, function(i, fighter){
-        $("#char-selection").append('<div class="col-2 character" value='+ i + '><p>' + arr[i].name + "</p></div>");
-
+        $("#char-selection").append('<div class="col-2 character" value='+ i + '>'+ 
+        '<img class="img-fluid selection-outline" src="assets/images/' + arr[i].name.split(' ').join('') + '.jpg" alt="playercharacter"/>'+
+        '<h6 class="healthpoints text-center" style="bottom: 1%">'+ arr[i].hp +'</h6><h6 class="char-name text-center">' + arr[i].name + '</h6></div>');
     })
 }
 
@@ -117,11 +128,15 @@ $(document).ready(function () {
             playerFighter.setindexofFighter(index);
             playerFighter.setplayerAtk();
             playerFighter.setplayerHP();
+            $("#player").attr("style","visibility: visible;");
+            $("#player > div > .char-name").text(allFighters[index].name);
             $("#player > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg"); //changing the image for the selected fighter
             $("#player > div > .healthpoints").text(playerFighter.playerHP);
+            $("#player > div > div > .healthbar").width(100+"%");
             fighterSelected = true;
             // fightersLeft.splice(index,1);
             $(this).remove();//Selection can no longer be made
+            $("#char-selection > div > img").attr("style", "border: 5px solid red");
             $("#instructions").text("Choose the defender!")
         }
         //If the player has already chosen their character and they click on a different character, if they are not currently fighting an enemy, the enemy fighter object
@@ -133,8 +148,12 @@ $(document).ready(function () {
             enemyFighter.setindexofEnemy(index);
             enemyFighter.setenemyAtk();
             enemyFighter.setenemyHP();
+            $("#defender").attr("style","visibility: visible;");
+            $("#defender > div > .char-name").text(allFighters[index].name);
             $("#defender > div > img").attr("src", ("assets/images/") + allFighters[index].name.split(' ').join('') + ".jpg");//changing the image for the selected enemy
             $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
+            $("#defender > div > div > .healthbar").stop(true, true);
+            $("#defender > div > div > .healthbar").width(100+"%");
             enemySelected = true;
             $(this).remove();//Selection can no longer be made
             $("#instructions").text("Defeat the defender!")
@@ -159,11 +178,21 @@ $(document).ready(function () {
         }
         
     });
+    //When the reset button is pressed, the flag booleans are reset, and the score reset. The relevant
+    //DOM elements are also updated. The player and enemy objects will not be reset until the player chooses
+    // their character and the defender again. 
     $("#reset").on("click", function(){
         fighterSelected = false;
         enemySelected = false;
+        playerFighter.dying = false;
+        enemyFighter.killed - false;
+        score =0;
         $("#char-selection").empty();
         populateFighters(allFighters);
+        $("#player").attr("style","visibility: hidden;");
+        $("#defender").attr("style","visibility: hidden;");
+        $("#instructions").text("Choose the character that you want to fight as!")
+        $("#info").empty();
         debugger
     });
     debugger
