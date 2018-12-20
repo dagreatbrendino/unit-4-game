@@ -13,8 +13,8 @@
     <script src="assets/javascript/game.js"></script>
 </head>
 <body>
-    <main>
-        <div class="container">
+    <main class=mn-con>
+        <div class="container mn-con">
             <div class ="row">
                     <div class="col" value="test">
                         <h5 id="instructions">Choose the character that you want to fight as!</h5>
@@ -32,7 +32,7 @@
             <!-- This will be an image of the character chosen by the player -->
             <div id="player" class ="row">
                     <div class="col-3">
-                        <img class="img-fluid" src="assets/images/placeholder.png" alt="playercharacter"/>
+                        <img class="img-fluid player-outline" src="assets/images/placeholder.png" alt="playercharacter"/>
                         <h6 class="healthpoints text-center"></h6>
                         <div class="healthbar-background">
                             <div class="healthbar"></div>
@@ -53,11 +53,16 @@
             <!-- Image of Defender -->
             <div id="defender" class="row">
                 <div class ="col-3">
-                        <img class="img-fluid" src="assets/images/placeholder.png" alt="enemycharacter"/>
+                        <img class="img-fluid enemy-outline" src="assets/images/placeholder.png" alt="enemycharacter"/>
                         <h6 class="healthpoints text-center"></h6>
                         <div class="healthbar-background">
                                 <div class="healthbar"></div>
                         </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button id="reset">Reset</button>
                 </div>
             </div>
             <div class ="row">

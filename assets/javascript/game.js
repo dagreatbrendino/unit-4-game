@@ -1,7 +1,8 @@
 console.log("i am ready");
-var allFighters = [{ name: "Mace Windu", hp: 150, atk: 8, counter: 25, alive: true, picked: false },
+var allFighters = [{ name: "Mace Windu", hp: 150, atk: 8, counter: 20, alive: true, picked: false },
 { name: "Kylo Ren", hp: 100, atk: 6, counter: 10, alive: true, picked: false },
-{ name: "Boba Fett", hp: 140, atk: 8, counter: 5, alive: true, picked: false}];
+{ name: "Jango Fett", hp: 130, atk: 10, counter: 5, alive: true, picked: false},
+{ name: "Yoda", hp: 175, atk: 12, counter: 15, alive: true, picked: false}];
 //Fighters left is intialized to be the same as all fighters. Items will be removed from this index as they are picked/defeated
 // var fightersLeft =  [{ name: "Mace Windu", hp: 150, atk: 8, counter: 25, alive: true, picked: false },
 // { name: "Kylo Ren", hp: 100, atk: 6, counter: 10, alive: true, picked: false }];
@@ -38,8 +39,7 @@ var playerFighter = {
             $("#defender > div > .healthpoints").text(enemyFighter.enemyHP);
             debugger
             var width = $("#defender > div > .healthbar-background").width()*( enemyFighter.enemyHP/ allFighters[enemyFighter.indexofEnemy].hp);
-            var height = $("#defender > div > div > .healthbar").height();
-            $("#defender > div > div > .healthbar").attr("style","clip: rect(0, "+width+"px, "+height+"px, 0)" );
+            $("#defender > div > div > .healthbar").animate({width: width},500);
         }
         
         this.playerAtk += allFighters[this.indexofFighter].atk;
@@ -81,8 +81,7 @@ var enemyFighter = {
             $("#info").append("<p>" + allFighters[this.indexofEnemy].name + " attacked you back for " + this.enemyAtk + " damage. </p>");
             $("#player > div > .healthpoints").text(playerFighter.playerHP);
             var width = $("#player > div > .healthbar-background").width()*( playerFighter.playerHP/ allFighters[playerFighter.indexofFighter].hp);
-            var height = $("#player > div > div > .healthbar").height();
-            $("#player > div > div > .healthbar").attr("style","clip: rect(0, "+width+"px, "+height+"px, 0)" );
+            $("#player > div > div > .healthbar").animate({width: width},500);
         }
     },
     killed: false,
@@ -109,7 +108,7 @@ var populateFighters = function(arr){
 $(document).ready(function () {
     populateFighters(allFighters);
     //When one of the character icons is clicked this function will be called
-    $(".character").on("click", function () {
+    $(document).on("click",".character", function () {
         //If the player has not yet chosen their character, the player character object will have its values reassigned to the same values as the character the player clicked on
         //after that the player will no longer be able to select a fighter
         if (!fighterSelected) {
@@ -160,5 +159,13 @@ $(document).ready(function () {
         }
         
     });
+    $("#reset").on("click", function(){
+        fighterSelected = false;
+        enemySelected = false;
+        $("#char-selection").empty();
+        populateFighters(allFighters);
+        debugger
+    });
+    debugger
 
 });
