@@ -1,6 +1,6 @@
 # Star Wars RPG
 ### Overview
-In this game the player will pick one of four characters from Star Wars to play as. Their goal is to elimante every other character before their health runs out
+In this game the player will pick one of four characters from Star Wars to play as. Their goal is to eliminate every other character before their health runs out
 ### Stats
 Every character starts with **Base Attack**, **Health Points**, and **Counter Attack*  
 ### Attacking
